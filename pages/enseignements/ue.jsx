@@ -5,28 +5,15 @@ import { MdLightMode } from "react-icons/md";
 
 function UePage(){
     return(
-        // <SidebarPage/>
-        <div className="grow px-4 py-2">
+        <div className="p-2 l-0 border-black sm:ml-64">
+            {/* titre de la page */}
+        <title>Home | UE</title>
 
-        <div className="p-2 l-0 border-black sm:ml-64">    
-        <title>Home | Schedule</title>    
-            tous le code ici
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
-            tous le code ici<br /><br />
+            <div className="flex flex-col gap-y-4">
+                tous le contenu de UE ici
+            </div>
             
-        tous le code ici</div></div>
+        </div>
     )
 
 }

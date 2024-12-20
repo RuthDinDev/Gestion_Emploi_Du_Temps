@@ -1,11 +1,14 @@
 import Profil from "@/components/generals/profil.component";
+//importation du UseTheme
+import useTheme from "@/contexts/themeContext";
 import FooterLayout from "@/layouts/footer";
 import React, {useState} from "react";
 import { MdLightMode } from "react-icons/md";
+import { FaSortDown } from "react-icons/fa";
+import { FaSortUp } from "react-icons/fa6";
 
 
 function HeaderPage(){
-
         // etat pour le modal de profil
         const [stateProfil, setStateProfil] = useState(false);
 
@@ -16,16 +19,15 @@ function HeaderPage(){
     
         // etat pour basculer lemode d'affichage
         const [stateModeChange, setStateModeChange] = useState(false);
-        // basculer en mode ligth et dark
-        const toggleModeChange =()=>{
-            setStateModeChange((prevState) => !prevState);
+        //function pour basculer
+        const toggleModeChange = () =>{
+            setStateModeChange(prevState => !prevState);
         }
-
         
     return(
-        <div className="p-2 l-0 sm:ml-64">        
-            <nav className={` ${stateModeChange ? "bg-gray-800" : "bg-gray-200"} top-0 z-50 w-full  border-b border-gray-200`}>
-                <div className="px-3 py-3 lg:px-5 lg:pl-3 ">
+        <div className="sm:ml-64">        
+            <nav className={` ${stateModeChange ? "bg-gray-800" : "bg-gray-200"} rounded-lg  mb-2 top-0 z-50 w-full  border-b border-gray-200`}>
+                <div className="py-2 lg:pl-3 ">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center justify-start rtl:justify-end">
                             <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -35,36 +37,47 @@ function HeaderPage(){
                                 </svg>
                             </button>
                             <div className="text-center">
-                                <div className={`${stateModeChange ? "text-white" : "text-black"}`}>FACULTES DES SCIENCES DE L'UNIVESITE DE NGAOUNDERE</div> 
+                                <div className={`${
+                                    stateModeChange 
+                                    ? "text-white" 
+                                    : "text-black"}`}
+                                >
+                                    FACULTES DES SCIENCES DE L'UNIVESITE DE NGAOUNDERE</div> 
                             </div>
                             
                         </div>
-                    
-                    {stateProfil &&(
-                        <Profil 
-                        closeModal={toggleProfilModal}
-                      />
-                    )}
-                    <div className="flex items-center">
+                        {stateProfil &&(
+                            <Profil 
+                            closeModal={toggleProfilModal}
+                        />
+                        )}
+                        <div className="flex items-center">
+                            
                         <div>
                             <MdLightMode onClick={toggleModeChange} className={`${stateModeChange ? "text-white" : "text-black"} text-2xl `}/>
                         </div>
                         <div className="flex items-center ms-3">
-                            <button onClick={toggleProfilModal} type="button" className={`flex text-sm bg-transparent rounded-lg focus:ring-4 focus:ring-white dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user`}>
-                                
-                                <span className="sr-only">{stateProfil ? "Close user menu": "Open user menu" } </span>
-                                <img className="w-9 h-9 rounded-full" src="/images/mon_profil.jpeg" alt="Profil"/>
-                                <span className={` ${stateModeChange ? "text-white" : "text-black"} mx-2 mt-1`}>The Peace</span>
-                                
+                            <button 
+                                onClick={toggleProfilModal} 
+                                type="button" 
+                                className={`w-40 h-9 mr-2 flex items-center justify-between text-sm bg-white rounded-lg dark:focus:ring-gray-600`} 
+                                aria-expanded="false" 
+                                data-dropdown-toggle="dropdown-user"
+                            >
+                            {/* <span className="sr-only">{stateProfil ? "Close user menu" : "Open user menu"}</span> */}
+                            <div className="flex items-center">
+                                <img className="w-6 h-6 ml-2 rounded-full" src="/images/mon_profil.jpeg" alt="Profil"/>
+                                <span className={`text-black mx-2`}>The Peace...</span>
+                            </div>
+                            <FaSortDown className="mr-2" />
                             </button>
-                            
                         </div>
                     </div>
 
                     </div>
                 </div>
                 </nav>
-                <FooterLayout/>
+                {/* <FooterLayout/> */}
             
         </div>
     )

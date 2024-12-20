@@ -1,24 +1,18 @@
 import clsx from 'clsx';
 
+import { RiSchoolLine } from "react-icons/ri";
+import { RiDashboardHorizontalLine } from "react-icons/ri";
+import { RiCalendarScheduleLine } from "react-icons/ri";
+import { BiBookBookmark } from "react-icons/bi";
+import { MdOutlineManageAccounts } from "react-icons/md";
+import { TbLogout2 } from "react-icons/tb";
+import { GoHome } from "react-icons/go";
+import { MdOutlineAccountTree } from "react-icons/md";
+import { RiTeamLine } from "react-icons/ri";
 import React, { useState } from 'react';
-import CarouselHome from './carouselHome';
-import { IoMdClose } from "react-icons/io";
-import { AiOutlineDashboard } from "react-icons/ai";
-import { FaAngleDown } from "react-icons/fa6";
-import { FaAngleRight } from "react-icons/fa6";
-import { MdCabin } from "react-icons/md";
-import { LuInspect } from "react-icons/lu";
-import { PiExam } from "react-icons/pi";
-import { MdOutlineArchive } from "react-icons/md";
-import { FaRegFolderOpen } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
 import { PiSignInFill } from "react-icons/pi";
-import FooterLayout from './footer';
-import Profil from '@/components/generals/profil.component';
 import NavItem from '@/components/generals/navigationItems';
-import Dashboard from '@/pages/dashboard/dashboard';
-import HedearPage from './header';
-
 function SidebarPage () {
 
     // état pour ouvrir un seul menu déroulant à la fois
@@ -39,91 +33,112 @@ function SidebarPage () {
     }
     return <>
 
-        <aside id="logo-sidebar" className={`fixed ${stateModeChange ? "dark:bg-gray-800 dark:border-gray-700" : "bg-gray-200"}  w-[255px] top-0 left-0 z-40 w-65 h-screen pt-5 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 `} aria-label="Sidebar">
-            <div className="p-5">
+        <aside id="logo-sidebar" className={`fixed ${stateModeChange
+            ? "rounded-lg bg-gray-800 dark:border-gray-700" 
+            : "bg-gray-200"}  
+            w-[255px] top-0 left-0 z-40 w-65 h-screen pt-5 transition-transform -translate-x-full bg-white  sm:translate-x-0 `} aria-label="Sidebar">
+            <div className="">
               <a href="#" className="flex-row md:me-24">
                 <div className="flex ">
-                    <img src="/images/logoFS.png" className="h-14 me-3 ml-14 hover:animate-spin" alt="Logo FS" />
-                    {/* <div className="text-green-500 self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">FS</div>                         */}
+                    <img src="/images/logoFS.png" className="h-11 me-3 ml-2 animate-zoom" alt="Logo FS" />
+                    <p className="text-[#800010] self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+                        FS-SCHEDULE
+                    </p>
                 </div>
-                <div className="text-orange-400  ml-10 self-center text-xl font-semibold sm:text-xl whitespace-nowrap dark:text-white">FS NDERE</div>
+                {/* <div className="text-orange-400  ml-10 self-center text-xl font-semibold sm:text-xl whitespace-nowrap dark:text-white">FS NDERE</div> */}
               </a>   
             </div>
                      
-            <div className={`${stateModeChange ? "bg-gray-800" : "bg-gray-200"}  h-full px-3 pb-4 overflow-y-auto  `}>
+            <div className={`${stateModeChange ? "bg-gray-800" : "bg-gray-200"} h-full p-3 pb-4 rounded-lg overflow-y-auto  `}>
             <ul>
                 {/* Dashboard */}
                 <a href="/dashboard/dashboard">
                      <NavItem
-                    Icon={AiOutlineDashboard}
-                    text="Dashboard"
-                    isDropdown={false}
-                    stateScroll={false}
-                    onClick={() => {}}
-                />
+                        Icon={GoHome}
+                        // iconColor="text-blue-700"
+                        text="Dashboard"
+                        isDropdown={false}
+                        stateScroll={false}
+                        onClick={() => {}}
+                    />
                 </a>
                
 
                 {/* Planifications */}
-                <NavItem
-                    Icon={PiExam}
-                    text="Planifications"
-                    count="3"
-                    isDropdown={false}
-                    stateScroll={false}
-                    onClick={() => {}}
-                />
+                <a href="/planification/planification">
+                    <NavItem
+                        Icon={RiCalendarScheduleLine}
+                        // iconColor="text-red-500"
+                        text="Planifications"
+                        count="3"
+                        isDropdown={false}
+                        stateScroll={false}
+                        onClick={() => {}}
+                    />
+                </a>
+                
 
                 {/* Personnels */}
-                <NavItem
-                    Icon={MdCabin}
+                {/* <NavItem
+                    Icon={RiTeamLine}
+                    // iconColor="text-blue-700"
                     text="Personnels"
                     isDropdown={true}
                     stateScroll={openDropdown === "personnels"}
                     onClick={toggleScroll}
                     index="personnels"
                     subItems={[
-                        { label: "Overview", link: "/overview" },
-                        { label: "Enseignant", link: "/enseignants" },
+                        { label: "Overview", link: "/personnels/overview" },
+                        { label: "Enseignant", link: "/personnels/enseignant" },
                     ]}
-                />
+                /> */}
 
                 {/* Enseignements */}
                 <NavItem
-                    Icon={MdCabin}
+                    Icon={BiBookBookmark}
+                    // iconColor="text-green-700"
                     text="Enseignements"
                     isDropdown={true}
                     stateScroll={openDropdown === "enseignements"}
                     onClick={toggleScroll}
                     index="enseignements"
                     subItems={[
-                    { label: "Unites UEs", link: "/enseignements/ue" },
-                    { label: "Affectation", link: "/enseignements/affectation" },
+                        { label: "Enseignant", link: "/enseignements/enseignant" },
+                        { label: "Unites UEs", link: "/enseignements/ue" },
+                        { label: "Affectation", link: "/enseignements/affectation" },
                     ]}
                 />
 
                 {/* Formations */}
-                <NavItem
-                    Icon={LuInspect}
-                    text="Formations"
-                    isDropdown={false}
-                    count="Pro"
-                    stateScroll={false}
-                    onClick={() => {}}
-                />
+                <a href="/formations/formation">
+                    <NavItem
+                        Icon={MdOutlineAccountTree}
+                        // iconColor="text-yellow-500"
+                        text="Formations"
+                        isDropdown={false}
+                        count=""
+                        stateScroll={false}
+                        onClick={() => {}}
+                    />
+                </a>
+                
 
                 {/* Salles */}
-                <NavItem
-                    Icon={MdOutlineArchive}
-                    text="Salles"
-                    isDropdown={false}
-                    stateScroll={false}
-                    onClick={() => {}}
-                />
+                <a href="/sales/salle">
+                    <NavItem
+                        Icon={RiSchoolLine}
+                        text="Salles"
+                        isDropdown={false}
+                        stateScroll={false}
+                        onClick={() => {}}
+                    />
+                </a>
+                
 
                 {/* Comptes */}
                 <NavItem
-                    Icon={MdCabin}
+                    Icon={MdOutlineManageAccounts}
+                    // iconColor="text-red-500"
                     text="Comptes"
                     isDropdown={false}
                     stateScroll={false}
@@ -132,7 +147,8 @@ function SidebarPage () {
 
                 {/* Général */}
                 <NavItem
-                    Icon={FcAbout}
+                    Icon={RiDashboardHorizontalLine}
+                    // iconColor="text-blue-700"
                     text="General"
                     isDropdown={false}
                     stateScroll={false}
@@ -142,12 +158,24 @@ function SidebarPage () {
                 {/* Sign Up */}
                 <NavItem
                     Icon={PiSignInFill}
+                    // iconColor="text-red-500"
                     text="Sign Up"
                     isDropdown={false}
                     stateScroll={false}
                     onClick={() => {}}
                 />
+                <div className="mb-10"></div>
+                <div className={`w-4/5 h-px -ml-3  bg-gray-400`}></div>
+                    {/* A propos */}
+                    <NavItem
+                        Icon={FcAbout}
+                        text="A propos"
+                        isDropdown={false}
+                        stateScroll={false}
+                        onClick={() => {}}
+                    />
                 </ul>
+                    
 
         </div>
         </aside>

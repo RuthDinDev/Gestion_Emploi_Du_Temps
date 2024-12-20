@@ -1,4 +1,5 @@
 // importation du css
+import { ThemeProvider } from "@/contexts/themeContext";
 import LayoutPage from "@/layouts/layout";
 import "@/public/css/schedule.css";
 import { usePathname } from "next/navigation";
@@ -13,7 +14,11 @@ export default function MyApp({ Component, pageProps }) {
     } else {
       return (
         <LayoutPage>
-          <Component {...pageProps} />
+          
+          <ThemeProvider>
+            <Component {...pageProps} />
+          </ThemeProvider>
+          
         </LayoutPage>
           
       );

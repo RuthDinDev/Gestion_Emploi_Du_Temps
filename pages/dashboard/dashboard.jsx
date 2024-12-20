@@ -4,15 +4,18 @@ import React, {useState} from "react";
 function Dashboard(){
 
     return(
-        <div className="grow px-4 py-2">
-            <div className="p-2 l-0 sm:ml-64">        
-              <div className="flex flex-col items-center justify-center bg-slate-700 h-screen">
+        <div className="grow rounded-lg sm:ml-64">
+            {/* <div className="p-2 l-0 "> */}
+              <div className="flex flex-col items-center justify-center gap-y-8 w-full h-full rounded-lg bg-slate-700">
                     <div className="flex items-center justify-center bg-slate-700 rounded dark:bg-gray-800 p-4 mb-8">
-                        <img className="rounded-lg w-12 h-12" src="/images/logoFS.png" alt="Logo" />
+                        <img className="relative w-10 h-10" src="/images/logoFS.png" alt="Logo" />
                         <p className="text-2xl text-gray-400 dark:text-gray-500 ml-4">
                         Faculté des sciences de l'Université de Ngaoundéré
                         </p>
                     </div>
+                    <strong className="text-8xl text-white">FS-SCHEDULE</strong>
+                    
+                    
 
                     <div className="flex items-center justify-center bg-slate-700 rounded dark:bg-gray-800 p-4">
                         <p className="text-4xl text-white dark:text-gray-500">
@@ -21,7 +24,7 @@ function Dashboard(){
                     </div>
                 </div>
             
-        </div>
+        {/* </div> */}
         </div>
         
     )

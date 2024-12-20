@@ -20,7 +20,8 @@ function LayoutPage({ children }) {
           <HeaderPage/>
 
         {/* Dashboard Page Content Zone */}
-        <div className="flex gap-x-3 w-full h-full overflow-hidden w-full transition-all duration-300 ease-out border dark:border-[#505050] rounded-md bg-transparent dark:bg-[#696969] overflow-y-auto scrollbar">
+        <div className="flex flex-col gap-x-3 w-full h-full overflow-hidden transition-all duration-300 ease-out  dark:border-[#505050] rounded-md bg-transparent dark:bg-[#696969] overflow-y-auto scrollbar">
+
           {/* Dashboard Page SideBar Zone */}
           <SidebarPage />
 

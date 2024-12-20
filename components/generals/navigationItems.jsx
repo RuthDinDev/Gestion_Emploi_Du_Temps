@@ -8,6 +8,8 @@ const NavItem = ({
   stateScroll,
   index,
   onClick,
+  bgColor,
+  iconColor,
   subItems = [], // Liste des sous-composants à afficher
 }) => {
   return (
@@ -16,10 +18,10 @@ const NavItem = ({
         onClick={() => onClick(index)} // Utilisation de props.onClick
         type="button"
         className={`${
-          stateScroll ? "bg-blue-700 hover:bg-blue-700" : ""
-        } flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700`}
+          stateScroll ? `bg-blue-700 text-white` : `hover:bg-gray-300`
+        } flex items-center w-full m-2 p-2 text-base text-gray-900 transition duration-75 rounded-lg group  hover:text- dark:text-white dark:hover:bg-gray-700`}
       >
-        <Icon className="text-2xl text-black" />
+        <Icon className={`text-xl ${iconColor}`} />
         <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
           {text}
         </span>
@@ -36,7 +38,7 @@ const NavItem = ({
             <li key={idx}>
               <a
                 href={item.link || "#"} // Par défaut, le lien est `#` si non spécifié
-                className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700"
+                className="flex items-center w- p-2 ml-3 text-gray-900 transition duration-75 rounded-lg pl-11 group bg-white hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700"
               >
                 {item.label}
               </a>

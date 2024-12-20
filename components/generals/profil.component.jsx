@@ -9,7 +9,7 @@ export default function Profil({ closeModal}) {
   };
 
   return (
-    <div className={`z-50 absolute top-20 right-4 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user`}>
+    <div className={`absolute z-50 top-20 right-5 flex flex-col items-center justify-center gap-y-4 w-full lg:w-[20vw] p-4 rounded-md bg-white dark:bg-[#18181b] shadow-md animate-slideIn`}>
       <div className="px-4 py-3 flex flex-col items-center justify-center" role="none">
           <button type="button" className="text-sm rounded-full dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <img className="w-20 h-20 rounded-full" src="/images/mon_profil.jpeg" alt="Profil"/>
@@ -20,20 +20,20 @@ export default function Profil({ closeModal}) {
           <p className="text-xl text-gray-900 dark:text-white" role="none">The Peace</p>
           <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">thepeace@gmail.com</p>
       </div>
-      <ul className="py-1" role="none">
-          <li>
-              <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
-          </li>
-          <li>
-              <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
-          </li>
-          <li>
-              <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
-          </li>
-          <li>
-              <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
-          </li>
-      </ul>
+      <div className="flex flex-col items-center justify-center gap-y-4 w-full mt-5">
+            <button
+            className="flex gap-x-2 items-center justify-center w-full py-2 rounded-md bg-[#E5E5E5] dark:bg-[#505050] hover:bg-[#B3B3B3] dark:hover:bg-[#363636] hover:text-white text-center transition delay-150 ease-in-out"
+            onClick={() => {}}
+            >
+            Changer de compte
+            </button>
+            <button
+            className="flex gap-x-2 items-center justify-center w-full py-2 rounded-md border-2 border-[#FF002C] text-[#FF002C] hover:text-white text-center hover:bg-[#FF002C] transition delay-150 ease-in-out"
+            onClick={() => {}}
+            >
+            Deconnexion
+            </button>
+        </div>
   </div>
   );
 }
