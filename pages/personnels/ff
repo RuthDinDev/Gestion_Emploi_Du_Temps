@@ -1,0 +1,207 @@
+import NavItem from "@/components/generals/navigationItems";
+import { AnneeAcademique } from "@/services/annee-academique.sevices";
+import { Parcours } from "@/services/parcours.services";
+import { Semestre } from "@/services/semestre.services";
+import { useState, useEffect } from "react";
+import {FaFilter, FaPlus} from "react-icons/fa"
+import { FiEdit } from "react-icons/fi";
+import { RiDeleteBin6Line, RiCloseFill } from "react-icons/ri";
+import { FaAngleDown, FaAngleRight } from "react-icons/fa";
+import { Salle } from "@/services/salle.services";
+import { MdOutlineReduceCapacity } from "react-icons/md";
+import DataTableShimmer from "@/components/shimmers/select_shimmer";
+import SelectShimmer from "@/components/shimmers/select_shimmer";
+
+function PlanificationPage(){
+
+    const [anneeAcademiqueData, setAnneeAcademiqueData] = useState([]);
+    const [parcoursData, setParcoursData] = useState([]);
+    const [semestreData, setSemestreData] = useState([]);
+    const [salleData, setSalleData] = useState([]);
+    const [isNewClicked, setIsNewClicked] = useState(false);
+    const [selectedAnnee, setSelectedAnnee] = useState(null);
+    const [selectedSemestre, setSelectedSemestre] = useState(null);
+    const [selectedParcours, setSelectedParcours] = useState(null);
+
+    const PlagesHoraires = [
+        "7h30-9h30", "9h30-11h30", "11h30-13h30", "13h30-15h30", "15h30-17h30", "17h30-19h20"
+    ];
+    const JoursSemaine = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+
+
+    const handleNewClick = () => {
+        setIsNewClicked(true);
+      };
+      
+      const handleAnneeChange = (e) => {
+        setSelectedAnnee(e.target.value);
+      };
+      
+      const handleSemestreChange = (e) => {
+        setSelectedSemestre(e.target.value);
+      };
+      
+      const handleParcoursChange = (e) => {
+        setSelectedParcours(e.target.value);
+      };
+      
+    useEffect(() => {
+        const fetchParcours = async() =>{
+            try {
+                const parcours = await Parcours.getAllParcours();
+                setParcoursData(parcours);
+            } catch (error) {
+                console.error(`${error.reponse.data.error}`, error)
+            }
+        };
+        
+        const fetchSemestre = async() =>{
+            try {
+                const semestre = await Semestre.getAllSemestres();
+                setSemestreData(semestre);
+            } catch (error) {
+                console.error("Erreur lors de la recuperation des Semestres");
+            }
+        };
+        const fetchAnneeAcademique = async () => {
+            try {
+                const annee = await AnneeAcademique.getAllAnneesAcademiques();
+                setAnneeAcademiqueData(annee);
+                
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données des dispense: ", error);
+            }
+        };
+        const fetchSalle = async () => {
+            try {
+                const annee = await Salle.getAllSalles();
+                setSalleData(annee);
+                
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données des dispense: ", error);
+            }
+        };
+
+        fetchAnneeAcademique();
+        fetchParcours();
+        fetchSemestre();
+        fetchSalle();
+    }, []);
+
+    return(
+        <div className="h-16  l-0 bg-[#002157]">
+            {/* titre de la page */}
+        <title>Home | Planification</title>
+
+            <div className="flex sm:ml-64 gap-y-2">
+                <aside id="logo-sidebar" className={`fixed "rounded-lg bg-[#E5E5E5] dark:border-gray-700 w-[255px] top-0 left-0 z-40 w-65 h-screen transition-transform -translate-x-full  sm:translate-x-0 `} aria-label="Sidebar">
+                    <div className="h-16 bg-[#002157] items-center">
+                        <p className="text-white font-medium mx-2 p-4">TABLEAU DE PLANIFIVATION</p>
+                    </div>
+                    {!isNewClicked ? <SelectShimmer /> : (
+                        <div className="bg-white h-24 my-2 m-2 rounded-lg">
+                            <div className="py-2 m-3">
+                                <label htmlFor="AnneeAcademique" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    AnneeAcademique
+                                </label>
+                                <select 
+                                    name="idAnneeAcademique"
+                                    id="idAnneeAcademique" 
+                                    onChange={handleAnneeChange}
+                                    required
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  outline-none block  p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                >
+                                    <option selected >Selectionner</option>
+                                    {anneeAcademiqueData.map((annee) =>(
+                                        <option key={annee.idAnneeAcademique} value={annee.idAnneeAcademique}>
+                                            {annee.ValueAnneeAcademique}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    )}
+                    {/* Semestr */}
+                    {!selectedAnnee ? <SelectShimmer /> : (
+                        <div className="bg-white h-24 my-2 m-2 rounded-lg">
+                            <div className="py-2 m-3">
+                                <label htmlFor="Semestre" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Semestre
+                                </label>
+                                <select name="idSemestre" id="idSemestre" 
+                                    // value={formData.idSemestre}
+                                    onChange={handleSemestreChange}
+                                    
+                                    required
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  outline-none block  p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                >
+                                    <option >Selectionner</option>
+                                    {semestreData.map((semestre) =>(
+                                        <option key={semestre.idSemestre} value={semestre.idSemestre}>{semestre.NumeroSemestre}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    )}
+                    {!selectedSemestre ? <SelectShimmer /> : (
+                        <div className="bg-white h-24 my-2 m-2 rounded-lg">
+                            <div className="py-2 m-3">
+                                <label htmlFor="Parcours" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Parcours
+                                </label>
+                                <select name="idParcours" id="idParcours" 
+                                    // value={formData.idParcours}
+                                    onChange={handleParcoursChange}
+                                    required
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  outline-none block mr-2 w-3/3 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                >
+                                    <option >Selectionner</option>
+                                    {parcoursData.map((parcours) =>(
+                                        <option key={parcours.idParcours}value={parcours.idParcours}>
+                                            {parcours.CodeParcours}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    )}
+                </aside> {/* fin de side barr*/}
+                {/* debut plannif */}
+                <div className="h-16 ">
+                    <div className="bg-white h-14 w-26 my-2 ml-[-1] bottom-0 rounded-t-lg">
+                        <button onClick={handleNewClick} className="m-3 text-xl font-medium flex gap-y-2 pt-3">
+                            <FaPlus className="mt- pr-1 text-3xl  text-orange-500 " />
+                            Nouvel
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 sm:ml-64">
+            {salleData.map(salle => (
+                <button
+                    key={salle.CodeSalle}
+                    className={`relative p-2 bg-white rounded-lg shadow ${!selectedParcours ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    disabled={!selectedParcours} 
+                >
+                    <div className="flex items-center bg-[#002157]  justify-between p-4 border-b rounded-t">
+                    <h3 className="text-xl text-white font-semibold">
+                        {salle.CodeSalle}
+                    </h3>
+                    </div>
+                    <div className="p-4 text-center">
+                    <div className="mb-5 text-gray-500 flex justify-center">
+                        <MdOutlineReduceCapacity className="text-orange-500 mr-3 text-2xl"/>
+                        {salle.Capacite} places
+                    </div>
+                    </div>
+                </button>
+                ))}
+            </div>
+        </div>
+    )
+}
+export default PlanificationPage;

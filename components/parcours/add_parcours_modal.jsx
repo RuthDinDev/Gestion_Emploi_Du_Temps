@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { RiCloseFill } from "react-icons/ri";
 
 
-const TeacherAddModal = ({ open, onClose, onAddTeacher }) => {
+const ParcoursAddModal = ({ open, onClose, onAddParcours }) => {
   const [formData, setFormData] = useState({
-    Matricule: "",
-    NomEnseignant: "",
-    Grade: "",
+    NomParcours: "",
+    CodeParcours: "",
   });
 
   const handleChange = (e) => {
@@ -20,15 +19,18 @@ const TeacherAddModal = ({ open, onClose, onAddTeacher }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
-      onAddTeacher(formData);
-      setFormData({Matricule: "", NomEnseignant: "", Grade: ""});
+      onAddParcours(formData);
+      setFormData({
+        NomParcours: "",
+        CodeParcours: "",
+      });
       onClose();
     } catch (error) {
-      console.error("Erreur lors de l'ajout de l'enseignant ", error);
+      console.error("Erreur lors de l'ajout du parcours ", error);
     }
-    console.log("Enseignant ajouté : ", formData);
+    console.log("Parcours ajouté : ", formData);
     
-    onClose(); // Fermer le modal après l'ajout
+    onClose(); 
   };
 
   return (
@@ -49,7 +51,7 @@ const TeacherAddModal = ({ open, onClose, onAddTeacher }) => {
             {/* Modal header */}
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Ajouter un nouvel enseignant
+                Ajouter un nouveau parcours
               </h3>
              <RiCloseFill
                 type="button"
@@ -60,56 +62,39 @@ const TeacherAddModal = ({ open, onClose, onAddTeacher }) => {
             {/* Modal body */}
             <div className="p-4 md:p-5">
               <form className="space-y-4" onSubmit={handleSubmit}>
-                <div>
-                  <label htmlFor="NomEnseignant" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >
-                    Nom
-                  </label>
-                  <input
-                    type="text"
-                    id="NomEnseignant"
-                    name="NomEnseignant"
-                    placeholder="Nom"
-                    value={formData.NomEnseignant}
-                    onChange={handleChange}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg outline-none block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    required
-                  />
-                </div>
-                <div className="flex">
-                        <div>
-                    <label htmlFor="Matricule" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >
-                        Matricule
+                <div className="mx-2">
+                    <label htmlFor="NomParcours" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >
+                        Nom Parcours
                     </label>
                     <input
                         type="text"
-                        id="Matricule"
-                        name="Matricule"
-                        placeholder="Matricule"
-                        value={formData.Matricule}
+                        id="NomParcours"
+                        name="NomParcours"
+                        placeholder="Nom salle"
+                        value={formData.NomParcours}
                         onChange={handleChange}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg outline-none block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        className="bg-gray-50  border border-gray-300 text-gray-900 text-sm rounded-lg outline-none block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         required
                     />
-                    </div>
-                    <div className="ml-16">
-                        <label htmlFor="Grade" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Grade
-                        </label>
-                        <select name="Grade" id="Grade" 
-                          value={formData.Grade}
-                          onChange={handleChange}
-                          required
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  outline-none block w-24 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                        >
-                            <option disabled >Selectionner</option>
-                            <option value="Docteur">Dr</option>
-                            <option value="Proffesseur">Pr</option>
-                        </select>
-                    </div>
+                </div>
+                <div className="mx-2">
+                    <label htmlFor="CodeParcours" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >
+                        CodeParcours
+                    </label>
+                    <input
+                        type="text"
+                        id="CodeParcours"
+                        name="CodeParcours"
+                        placeholder="CodeParcours"
+                        value={formData.CodeParcours}
+                        onChange={handleChange}
+                        className="bg-gray-50  border border-gray-300 text-gray-900 text-sm rounded-lg outline-none block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required
+                    />
                 </div>
                 
                 <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" >
-                  Ajouter Enseignant
+                  Ajouter Parcours
                 </button>
               </form>
               <div className="flex items-center gap-4 my-4">
@@ -140,4 +125,4 @@ const TeacherAddModal = ({ open, onClose, onAddTeacher }) => {
   );
 };
 
-export default TeacherAddModal;
+export default ParcoursAddModal;

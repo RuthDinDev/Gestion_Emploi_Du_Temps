@@ -18,10 +18,10 @@ const NavItem = ({
         onClick={() => onClick(index)} // Utilisation de props.onClick
         type="button"
         className={`${
-          stateScroll ? `bg-blue-700 text-white` : `hover:bg-gray-300`
-        } flex items-center w-full m-2 p-2 text-base text-gray-900 transition duration-75 rounded-lg group  hover:text- dark:text-white dark:hover:bg-gray-700`}
+          stateScroll ? `bg-[#002198] text-white` : `hover:bg-[#002157] hover:text-white`
+        } flex items-center w-full my-1 p-2 text-base text-gray-900 transition duration-75 rounded-lg group  hover:text- dark:text-white dark:hover:bg-gray-700`}
       >
-        <Icon className={`text-xl ${iconColor}`} />
+        <Icon className={`text-2xl ${iconColor}`} />
         <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
           {text}
         </span>
@@ -33,7 +33,7 @@ const NavItem = ({
         {isDropdown && (stateScroll ? <FaAngleDown /> : <FaAngleRight />)}
       </button>
       {stateScroll && isDropdown && subItems.length > 0 && (
-        <ul id="dropdown-example" className="py-2 space-y-2">
+        <ul id="dropdown-example" className="pr-2 py-1 bg-gray-200 space-y-1 rounded-lg">
           {subItems.map((item, idx) => (
             <li key={idx}>
               <a

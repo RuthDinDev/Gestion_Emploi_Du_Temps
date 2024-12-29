@@ -26,7 +26,7 @@ function HeaderPage(){
         
     return(
         <div className="sm:ml-64">        
-            <nav className={` ${stateModeChange ? "bg-gray-800" : "bg-gray-200"} rounded-lg  mb-2 top-0 z-50 w-full  border-b border-gray-200`}>
+            <nav className={` ${stateModeChange ? "bg-gray-800" : "bg-[#002157]"} rounded-lg  mb-2 top-0 z-50 w-full  border-b border-gray-200`}>
                 <div className="py-2 lg:pl-3 ">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center justify-start rtl:justify-end">
@@ -37,12 +37,9 @@ function HeaderPage(){
                                 </svg>
                             </button>
                             <div className="text-center">
-                                <div className={`${
-                                    stateModeChange 
-                                    ? "text-white" 
-                                    : "text-black"}`}
-                                >
-                                    FACULTES DES SCIENCES DE L'UNIVESITE DE NGAOUNDERE</div> 
+                                <div className="text-white text-xl">
+                                    FACULTES DES SCIENCES DE L'UNIVESITE DE NGAOUNDERE
+                                </div> 
                             </div>
                             
                         </div>

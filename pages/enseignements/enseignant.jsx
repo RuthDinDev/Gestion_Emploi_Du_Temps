@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from "react";
+// impost des icones
 import { RiSearch2Line } from "react-icons/ri";
 import { FaSortDown ,FaPlus, FaSort, FaFilter, FaPrint } from "react-icons/fa";
+
+// importation des composants
 import NoDataToDisplay from "@/components/generals/no_data_display";
 import AlertModal from "@/components/modal/alert_modal";
 import DataTable from "@/components/generals/table_Data";
@@ -8,43 +11,75 @@ import DetailModal from "@/components/modal/detail_modal";
 import TeacherAddModal from "@/components/enseignants/add_enseignant_modal";
 import DataTableShimmer from "@/components/shimmers/data_table_shimmers";
 
+// import des servives
+import { Enseignant } from "@/services/enseignant.services";
+import Toast from "@/components/generals/toast_message";
+
 
 
 function EnseignantPage(){
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [stateSearchBar, setStateSearchBar] = useState(false);
-        const toggleShowSearchBar = () =>{
-            setStateSearchBar(prevState => !prevState);
+    const [toast, setToast] = useState(null);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedEnseignant, setSelectedEnseignant] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [enseignantData, setEnseignantData] = useState([]);
+
+    const showToast = (message, color) => {
+        setToast({ message, color });
+        setTimeout(() => setToast(null), 5000);
+    };
+
+    const toggleShowSearchBar = () =>{
+        setStateSearchBar(prevState => !prevState);
+    }
+
+    const handleRowClick =(enseignant) =>{
+        setSelectedEnseignant(enseignant);
+        setModalOpen(true);
+    }
+
+    const handleAddTeacher = async(newTeacher) => {
+        try {
+            const response = await Enseignant.createEnseignant(newTeacher);
+            showToast("Enseignat ajoute avec succès !", "green")
+            setEnseignantData([... enseignantData, response]);
+        } catch (error) {
+            showToast(`${error.response.data.error}`, "red");
         }
-        const [isModalOpen, setModalOpen] = useState(false);
-        const [selectedEnseignant, setSelectedEnseignant] = useState(null);
-
-        const handleRowClick =(enseignant) =>{
-            setSelectedEnseignant(enseignant);
-            setModalOpen(true);
+    }
+    // suppression de 
+    const handeleDeletedTeacher = async(idEnseignant) =>{
+        try {
+            await Enseignant.deleteEnseignant(idEnseignant);
+            setEnseignantData(prevEnseignantData =>
+                prevEnseignantData.filter(enseignant => enseignant.idEnseignant !== idEnseignant)
+              );
+              showToast(`Enseignant supprimé avec succès !`,"green");
+            setEnseignantData([... enseignantData, response]);
+            
+        } catch (error) {
+            // console.log("wwwwwww ",id);
+            // showToast(`${error.response.data.error}`, "red");
         }
-        const [isLoading, setIsLoading] = useState(true);
-        const [data, setData] = useState([]);
-        useEffect(() => {
-            // Simule une requête API
-            setTimeout(() => {
-              setData([
-                { idEnseignant: 1, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT123", roleEnseignant: "Manageur" },
-                { idEnseignant: 2, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT456", roleEnseignant: "Developpeur" },
-                { idEnseignant: 3, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT789", roleEnseignant: "Designer" },
-                { idEnseignant: 1, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT123", roleEnseignant: "Manageur" },
-                { idEnseignant: 2, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT456", roleEnseignant: "Developpeur" },
-                { idEnseignant: 3, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT789", roleEnseignant: "Designer" },
-                { idEnseignant: 1, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT123", roleEnseignant: "Manageur" },
-                { idEnseignant: 2, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT456", roleEnseignant: "Developpeur" },
-                { idEnseignant: 3, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT789", roleEnseignant: "Designer" },
+    }
 
-              ]);
-              setIsLoading(false);
-            }, 3000);
-          }, []);
-
-
+    useEffect(() => {
+        const fetchEnseignant = async () => {
+            try {
+                const enseignants = await Enseignant.getAllEnseignants();
+                setEnseignantData(enseignants);
+                setTimeout( () =>{
+                    setIsLoading(false);
+                },1000);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données des enseignants :", error);
+            }
+        };
+        fetchEnseignant();
+    }, []);
+                
     return(
         <div className="p-2 l-0 border-black sm:ml-64">
             {/* titre de la page */}
@@ -88,21 +123,27 @@ function EnseignantPage(){
                         Imprimer
                     </button>
                 </div>
-                {/* liste des Enseignants */}
-                {/* <h2 className="text-xl font-semibold ">LISTE DES EnseignantS</h2> */}
+                {toast && (
+                <Toast
+                    message={toast.message}
+                    color={toast.color}
+                    onClose={() => setToast(null)}
+                    />
+                )}
+                
                 <div className="p-0">
                     { isLoading ? (
                         <DataTableShimmer />
-                    ) : data.length === 0 ? (
+                    ) : enseignantData.length === 0 ? (
                         <NoDataToDisplay />
                     ) : (
                         <DataTable
                         headers={[
-                            { key: "nameEnseignant", label: "Noms" },
-                            { key: "matricule", label: "Matricule" },
-                            { key: "roleEnseignant", label: "Rôle(s)" },
+                            { key: "NomEnseignant", label: "Noms" },
+                            { key: "Matricule", label: "Matricule" },
+                            { key: "Grade", label: "Grade(s)" },
                         ]}
-                        data={data}
+                        data={enseignantData}
                         rowKey="idEnseignant"
                         onRowClick={handleRowClick}
                         />
@@ -110,29 +151,36 @@ function EnseignantPage(){
                     </div>
 
                     <div>
-                        <TeacherAddModal open={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
+                        <TeacherAddModal 
+                            open={isAddModalOpen}
+                            onClose={() => setAddModalOpen(false)}
+                            onAddTeacher={(handleAddTeacher)}
+                        />
                     </div>
 
                 {/* Modal d'affichage des détails */}
                 <DetailModal
                     open={isModalOpen}
                     onClose={() => setModalOpen(false)}
+                    onDeleted={() => {
+                        handeleDeletedTeacher(selectedEnseignant.idEnseignant);
+                    }}
                     title="Détails de l'Enseignant"
                 >
                     {selectedEnseignant ? (
-                    <div className="text-left">
-                        <p className="text-lg font-medium text-gray-800">
-                        Nom : {selectedEnseignant.nameEnseignant}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                        Matricule : {selectedEnseignant.matricule}
-                        </p>
-                        <p className="text-sm text-gray-500">Rôle : {selectedEnseignant.roleEnseignant}</p>
-                    </div>
+                        <div className="text-left">
+                            <p className="text-lg font-medium text-gray-800">
+                            Nom : {selectedEnseignant.NomEnseignant}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                            Matricule : {selectedEnseignant.Matricule}
+                            </p>
+                            <p className="text-sm text-gray-500">Grade : {selectedEnseignant.Grade}</p>
+                        </div>
                     ) : (
-                    <p className="text-sm text-gray-500">Aucun enseignant sélectionné.</p>
+                        <p className="text-sm text-gray-500">Aucun enseignant sélectionné.</p>
                     )}
-                    
+                     
                 </DetailModal>
             </div>
             

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 export default function MyApp({ Component, pageProps }) {
     const pathname = usePathname()
     // Exclude specific paths from the layout
-    const excludeLayoutPaths = ["/pdf/pdf-renderer"]; 
+    const excludeLayoutPaths = ["/planification/planification"]; 
   
     if (excludeLayoutPaths.includes(pathname)) {
       return <Component {...pageProps} />;

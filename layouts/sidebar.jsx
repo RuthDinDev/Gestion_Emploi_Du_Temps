@@ -35,13 +35,13 @@ function SidebarPage () {
 
         <aside id="logo-sidebar" className={`fixed ${stateModeChange
             ? "rounded-lg bg-gray-800 dark:border-gray-700" 
-            : "bg-gray-200"}  
+            : "bg-[#002157]"}  
             w-[255px] top-0 left-0 z-40 w-65 h-screen pt-5 transition-transform -translate-x-full bg-white  sm:translate-x-0 `} aria-label="Sidebar">
             <div className="">
               <a href="#" className="flex-row md:me-24">
                 <div className="flex ">
-                    <img src="/images/logoFS.png" className="h-11 me-3 ml-2 animate-zoom" alt="Logo FS" />
-                    <p className="text-[#800010] self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+                    <img src="/images/logoFS.png" className="h-11 me-3 ml-2 animate-bounce" alt="Logo FS" />
+                    <p className="text-yellow-500 self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
                         FS-SCHEDULE
                     </p>
                 </div>
@@ -49,13 +49,13 @@ function SidebarPage () {
               </a>   
             </div>
                      
-            <div className={`${stateModeChange ? "bg-gray-800" : "bg-gray-200"} h-full p-3 pb-4 rounded-lg overflow-y-auto  `}>
+            <div className={`${stateModeChange ? "bg-gray-800" : "bg-white "} mx-1 h-full p-3 pb-4 rounded-lg overflow-y-auto  `}>
             <ul>
                 {/* Dashboard */}
-                <a href="/dashboard/dashboard">
+                <a href="/">
                      <NavItem
                         Icon={GoHome}
-                        // iconColor="text-blue-700"
+                        iconColor="text-blue-500"
                         text="Dashboard"
                         isDropdown={false}
                         stateScroll={false}
@@ -68,7 +68,7 @@ function SidebarPage () {
                 <a href="/planification/planification">
                     <NavItem
                         Icon={RiCalendarScheduleLine}
-                        // iconColor="text-red-500"
+                        iconColor="text-red-500"
                         text="Planifications"
                         count="3"
                         isDropdown={false}
@@ -81,7 +81,7 @@ function SidebarPage () {
                 {/* Personnels */}
                 {/* <NavItem
                     Icon={RiTeamLine}
-                    // iconColor="text-blue-700"
+                    iconColor="text-blue-700"
                     text="Personnels"
                     isDropdown={true}
                     stateScroll={openDropdown === "personnels"}
@@ -96,7 +96,7 @@ function SidebarPage () {
                 {/* Enseignements */}
                 <NavItem
                     Icon={BiBookBookmark}
-                    // iconColor="text-green-700"
+                    iconColor="text-green-700"
                     text="Enseignements"
                     isDropdown={true}
                     stateScroll={openDropdown === "enseignements"}
@@ -113,7 +113,7 @@ function SidebarPage () {
                 <a href="/formations/formation">
                     <NavItem
                         Icon={MdOutlineAccountTree}
-                        // iconColor="text-yellow-500"
+                        iconColor="text-yellow-500"
                         text="Formations"
                         isDropdown={false}
                         count=""
@@ -138,7 +138,7 @@ function SidebarPage () {
                 {/* Comptes */}
                 <NavItem
                     Icon={MdOutlineManageAccounts}
-                    // iconColor="text-red-500"
+                    iconColor="text-red-500"
                     text="Comptes"
                     isDropdown={false}
                     stateScroll={false}
@@ -148,7 +148,7 @@ function SidebarPage () {
                 {/* Général */}
                 <NavItem
                     Icon={RiDashboardHorizontalLine}
-                    // iconColor="text-blue-700"
+                    iconColor="text-blue-700"
                     text="General"
                     isDropdown={false}
                     stateScroll={false}
@@ -158,7 +158,7 @@ function SidebarPage () {
                 {/* Sign Up */}
                 <NavItem
                     Icon={PiSignInFill}
-                    // iconColor="text-red-500"
+                    iconColor="text-red-500"
                     text="Sign Up"
                     isDropdown={false}
                     stateScroll={false}

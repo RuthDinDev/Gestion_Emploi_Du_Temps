@@ -1,39 +1,153 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+// impost des icones
 import { RiSearch2Line } from "react-icons/ri";
 import { FaSortDown ,FaPlus, FaSort, FaFilter, FaPrint } from "react-icons/fa";
+
+// importation des composants
 import NoDataToDisplay from "@/components/generals/no_data_display";
 import AlertModal from "@/components/modal/alert_modal";
+import DataTable from "@/components/generals/table_Data";
+import DetailModal from "@/components/modal/detail_modal";
+import DispenseAddModal from "@/components/affectation/add-affectation";
+import DataTableShimmer from "@/components/shimmers/data_table_shimmers";
+
+// import des servives
+import Toast from "@/components/generals/toast_message";
+import { Dispense } from "@/services/dispense.services";
+import { UE } from "@/services/ue.services";
+import { Enseignant } from "@/services/enseignant.services";
+import { AnneeAcademique } from "@/services/annee-academique.sevices";
 
 
 
-function EnseignantPage(){
-
+function AffectationPage(){
+    const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [stateSearchBar, setStateSearchBar] = useState(false);
-        const toggleShowSearchBar = () =>{
-            setStateSearchBar(prevState => !prevState);
-        }
-        
-        const [data, setData] = useState([
-            { idEnseignant: 1, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT123", roleEnseignant: "Manager" },
-            { idEnseignant: 2, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT456", roleEnseignant: "Developer" },
-            { idEnseignant: 3, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT789", roleEnseignant: "Designer" },
-            { idEnseignant: 1, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT123", roleEnseignant: "Manager" },
-            { idEnseignant: 2, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT456", roleEnseignant: "Developer" },
-            { idEnseignant: 3, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT789", roleEnseignant: "Designer" },
-            // { idEnseignant: 1, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT123", roleEnseignant: "Manager" },
-            // { idEnseignant: 2, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT456", roleEnseignant: "Developer" },
-            // { idEnseignant: 3, nameEnseignant: "YOUSSOUFA NJUPUEN", matricule: "MAT789", roleEnseignant: "Designer" },
-          ]);
+    const [toast, setToast] = useState(null);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedDispense, setSelectedDispense] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [dispenseData, setDispenseData] = useState([]);
+    const [enseignantData, setEnseignantData] = useState([]);
+    const [ueDetails, setUEDetails] = useState(null);
+    const [enseignantDetails, setEnseignantDetails] = useState(null);
+    const [anneeDetails, setAnneeDetails] = useState(null);
+    const [shouldRefreshData, setShouldRefreshData] = useState(false);
 
+
+    const showToast = (message, color) => {
+        setToast({ message, color });
+        setTimeout(() => setToast(null), 5000);
+    };
+
+    const toggleShowSearchBar = () =>{
+        setStateSearchBar(prevState => !prevState);
+    }
+
+    const handleRowClick = async (dispense) =>{
+        setSelectedDispense(dispense);
+        setModalOpen(true);
+        try {
+            const ue = await UE.getUEById(dispense.idUE);
+            const enseignant = await Enseignant.getEnseignantById(dispense.idEnseignant);
+            const annee = await AnneeAcademique.getAnneeAcademiqueById(dispense.idAnneeAcademique);
+
+            setUEDetails(ue);
+            setEnseignantDetails(enseignant);
+            setAnneeDetails(annee);
+        } catch (error) {
+            console.error("erreur de recuperation des details ", error);
+        }
+    }
+
+    const handleAddDispense = async(newDispense) => {
+        try {
+            const response = await Dispense.createDispense(newDispense);
+            showToast("Afffectation ajoutee avec succès !", "green")
+            setDispenseData([... dispenseData, response]);
+            setShouldRefreshData(true);
+        } catch (error) {
+            showToast(`${error.response.data.error}`, "red");
+        }
+    }
+    // suppression de 
+    const handeleDeletedDispense = async(idDispense) =>{
+        try {
+            await Dispense.deleteDispense(idDispense);
+            setDispenseData(prevDispenseData =>
+                prevDispenseData.filter(dispense => dispense.idDispense !== idDispense)
+              );
+              showToast(`Dispense supprimé avec succès !`,"green");
+            setDispenseData([... dispenseData, response]);
+            
+        } catch (error) {
+            // console.log("wwwwwww ",id);
+            // showToast(`${error.response.data.error}`, "red");
+        }
+    }
+    useEffect(() => {
+        if (shouldRefreshData) {
+            const fetchDispense = async () => {
+                try {
+                    const dispenses = await Dispense.getAllDispenses();
+                    setDispenseData(dispenses);
+                    setShouldRefreshData(false); // Réinitialiser l'état après actualisation
+                } catch (error) {
+                    console.error("Erreur lors de l'actualisation des données des dispenses :", error);
+                }
+            };
+    
+            fetchDispense();
+        }
+    }, [shouldRefreshData]);
+    
+    useEffect(() => {
+        const fetchDispense = async () => {
+            try {
+                const dispenses = await Dispense.getAllDispenses();
+                const enseignants = await Enseignant.getAllEnseignants();
+                const ues = await UE.getAllUEs();
+                const annees = await AnneeAcademique.getAllAnneesAcademiques();
+                console.log("anneee ", annees);
+    
+                // Mappez les données pour inclure les noms
+                const transformedData = dispenses.map((dispense) => ({
+                    ...dispense,
+                    nomEnseignant: enseignants.find((ens) => ens.idEnseignant === dispense.idEnseignant)?.NomEnseignant || "Non spécifié",
+                    nomUE: ues.find((ue) => ue.idUE === dispense.idUE)?.NomUE || "Non spécifié",
+                    anneeAcademique: annees.find((annee) => String(annee.idAnneeAcademique) === String(dispense.idAnneeAcademique))?.ValueAnneeAcademique || "Non spécifié",
+                }));
+    
+                setDispenseData(transformedData);
+    
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 1000);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données :", error);
+            }
+        };
+        const fetchEnseignant = async () => {
+            try {
+                const ens = await Enseignant.getAllEnseignants();
+                setEnseignantData(ens);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données des ens :", error);
+            }
+        };
+        fetchDispense();
+        fetchEnseignant();
+    }, []);
+                
     return(
         <div className="p-2 l-0 border-black sm:ml-64">
             {/* titre de la page */}
-        <title>Home | Enseignant</title>
+        <title>Home | Dispense</title>
 
             <div className="flex flex-col gap-y-4">
-                {/* Head cotenant les option de Enseignant */}
+                {/* Head cotenant les option de Dispense */}
                 <div className="bg-gray-200 w-screen p-2 left-0 flex flex-row justify-betwen ">
-                    <div className="flex items-center"><h2 className="text-xl ">LISTE DES EnseignantS  </h2>
+                    <div className="flex items-center"><h2 className="text-xl ">LISTE DES AFFECTATIONS  </h2>
                         {/*barre de treherche*/}
                         <div className="flex items-center pl-5 mx-auto"> 
                             {stateSearchBar? 
@@ -51,7 +165,7 @@ function EnseignantPage(){
                         </div>
                     </div>
                     </div>
-                    <button type="button" className="flex items-center w-24 text-white bg-blue-700 hover:text-white hover:bg-blue-800 focus:ring-blue-300 font-medium rounded-lg text-sm my-2 px-2 py-2 text-center inline-flex me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                    <button type="button" onClick={() => setAddModalOpen(true)} className="flex items-center w-24 text-white bg-blue-700 hover:text-white hover:bg-blue-800 focus:ring-blue-300 font-medium rounded-lg text-sm my-2 px-2 py-2 text-center inline-flex me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
                         <FaPlus className="mr-1" />
                         Ajouter
                     </button>
@@ -68,50 +182,91 @@ function EnseignantPage(){
                         Imprimer
                     </button>
                 </div>
-                {/* liste des Enseignants */}
-                {/* <h2 className="text-xl font-semibold ">LISTE DES EnseignantS</h2> */}
+                {toast && (
+                <Toast
+                    message={toast.message}
+                    color={toast.color}
+                    onClose={() => setToast(null)}
+                    />
+                )}
+                
                 <div className="p-0">
-                    {data.length === 0 ? (
+                    { isLoading ? (
+                        <DataTableShimmer />
+                    ) : dispenseData.length === 0 ? (
                         <NoDataToDisplay />
                     ) : (
-                        
-                        <div className="bg-gray-200 shadow rounded-lg">
-                            {/* <AlertModal/> */}
-                        {/* En-tête */}
-                        <div className="bg-gray-100 text-gray-800 font-semibold flex justify-between py-2 px-4 rounded-t-lg">
-                            <p className="w-1/3">Noms</p>
-                            <p className="w-1/3">Matricule</p>
-                            <p className="w-1/3">Rôle(s)</p>
-                        </div>
-
-                        {/* Liste */}
-                        <ul className="divide-y divide-gray-100">
-                            {data.map((Enseignant) => (
-                            <li
-                                key={Enseignant.idEnseignant}
-                                className="flex justify-between bg-white items-center transition-75 py-2 px-4 hover:bg-gray-100"
-                            >
-                                <p className="w-1/3 text-lg text-gray-800">
-                                {Enseignant.nameEnseignant}
-                                </p>
-                                <p className="w-1/3 text-lg text-gray-500">
-                                {Enseignant.matricule}
-                                </p>
-                                <p className="w-1/3 text-lg text-gray-500">
-                                {Enseignant.roleEnseignant}
-                                </p>
-                            </li>
-                            ))}
-                        </ul>
-                        </div>
+                        <DataTable
+                        headers={[
+                            { key: "nomUE", label: "UEs" },
+                            { key: "nomEnseignant", label: "Enseignant Responsable" },
+                            { key: "anneeAcademique", label: "Annee" },
+                        ]}
+                        data={dispenseData}
+                        rowKey="idDispense"
+                        onRowClick={handleRowClick}
+                        />
                     )}
                     </div>
 
+                    <div>
+                        <DispenseAddModal 
+                            open={isAddModalOpen}
+                            onClose={() => setAddModalOpen(false)}
+                            onAddDispense={(handleAddDispense)}
+                        />
+                    </div>
 
-
+                {/* Modal d'affichage des détails */}
+                <DetailModal
+                    open={isModalOpen}
+                    onClose={() => {
+                        setModalOpen(false);
+                        setSelectedDispense(null);
+                        setUEDetails(null);
+                        setEnseignantDetails(null);
+                        setAnneeDetails(null);
+                    }}
+                    onDeleted={() => {
+                        handeleDeletedDispense(selectedDispense.idDispense);
+                    }}
+                    title="Détails de l'Affectation"
+                >
+                    {selectedDispense ? (
+                        <div className="text-left">
+                            <p className="text-lg font-medium text-gray-800">
+                                UEs :  {ueDetails?.NomUE || "_"}
+                            </p>
+                            <p className="text-lg font-medium text-gray-800">
+                                Enseignant : {enseignantDetails?.NomEnseignant || "_"}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                                Annee Accademique : {anneeDetails?.ValueAnneeAcademique || "_"}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                                Responsabilite : {selectedDispense.isPrincipal ? "Principale" : "Assistant"}
+                            </p>
+                        </div>
+                    ) : (
+                        <p className="text-sm text-gray-500">Aucun dispense sélectionné.</p>
+                    )}
+                     
+                </DetailModal>
             </div>
             
         </div>
     )
+    // fonction de filtre des ens en fonction des idUes
+    const getEnseignantByIdUE = (idUE) =>{
+        // je filtre les dispenses pour recuperer les enseignants corespondants a la ligne
+        // corespondant au idUE selectionner
+        const dispenseByIdUE = dispenseData.filter((dispense) => dispense.idEnseignant);
+        // j'extrait les idEns dans les dispenses filtree
+        const idEnseignants = dispenseByIdUE.map(dispense => dispense.idEnseignant);
+        // maintenent je filtre les enseignants pour uniquement consever ceux dont leur id est dans idEnseignants extrait
+        const EnseignantUE = enseignantData.filter(ens => idEnseignants.includes(ens.idEnseignant));
+
+        return EnseignantUE
+    };
 }
-export default EnseignantPage;
+export default AffectationPage;
